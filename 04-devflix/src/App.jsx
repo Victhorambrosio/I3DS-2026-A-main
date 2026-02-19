@@ -1,9 +1,24 @@
-import "./App.css"
+import "./App.css";
+
+import logo from "./assets/devflix.png";
+import lupa from "./assets/search.svg";
+import Rodape from "./components/rodape/Rodape";
 
 const App = () => {
   return (
-    <div>App</div>
-  )
-}
+    <div id="App">
+      <img
+        src={logo}
+        alt="Logo do serviço de streaming Netflix com destaque para a palavra 'DEVFLIX' em letras vermelhas sob fundo preto."
+      />
 
-export default App
+      <div className="search">
+        <input type="text" placeholder="Pesquise por filmes e séries..." />
+        <img src={lupa} alt="Botão de ação para pesquisa!" />
+      </div>
+      <Rodape>Victhor Ambrosio</Rodape>
+    </div>
+  );
+};
+
+export default App;

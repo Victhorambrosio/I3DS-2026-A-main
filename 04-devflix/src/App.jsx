@@ -1,48 +1,61 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 import logo from "./assets/devflix.png";
 import lupa from "./assets/search.svg";
-import Rodape from "./components/rodape/Rodape";
+
+import Rodape from "./components/Rodape/Rodape";
+import MovieCard from "./components/MovieCard/MovieCard";
 
 const App = () => {
-  const [movies; setMovies] = useState([]);
-  
+  const [movies, setMovies] = useState([]);
+
   //Utilizando uma CHAVE de API do arquivo .env
-const apiKey = import.meta.env.VITE_OMDB_API_KEY;
-const apiUrl = `https://omdbadi.com/?apikey=${apiKey}`;
+  const apiKey = import.meta.env.VITE_OMDB_API_KEY;
+  const apiUrl = `https://omdbapi.com/?apikey=${apiKey}`;
 
-//Criando a conexão com API e trazendo informações
-const serachMovies = async (title) => {
-  const response = await fetch (`${apiUrl}&s=${title}`);
-  const data = await response.json;
+  // Ajustando a lógica de busca de filmes
+  const searchMovies = async (title) => {
+    if (!title) return; // Verifica se o título foi fornecido
+    const response = await fetch(`${apiUrl}&s=${title}`);
+    const data = await response.json();
+    if (data.Response === "True") {
+      setMovies(data.Search); // Atualiza o estado com os filmes encontrados
+    } else {
+      setMovies([]); // Limpa a lista se nenhum filme for encontrado
+    }
+  };
 
-  //Alimentando a variavel movies
-  setMovies(data.Search);
-};
-
-useEffect(() => {
-  serachMovies("Batman");
-});
+  useEffect(() => {
+    searchMovies("naruto");
+  }, []);
 
   return (
     <div id="App">
       <img
-      id="Logo"
-      src={logo}
-       alt="Logo do serviço de streaming Netflix com destaque para a palavra 'DEVFLIX' em letras vermelhas sob fundo preto."
+        id="Logo"
+        src={logo}
+        alt="Logotipo do serviço de streaming Devflix, com letras vermelhas e fundo preto, promovendo conteúdo de séries, filmes e entretenimento online."
       />
 
       <div className="search">
-        <input type="text" placeholder="Pesquise por filmes e séries..." />
+        <input type="text" placeholder="Pesquise por filmes" />
         <img src={lupa} alt="Botão de ação para pesquisa!" />
       </div>
 
-      <div className="container">
-       
-      </div>
+      {movies?.length > 0 ? (
+        <div className="container">
+          {movies.map((movie, index) => (
+            <MovieCard key={index} {...movie} />
+          ))}
+        </div>
+      ) : (
+        <h2>😥 Filme não encontrado 😥</h2>
+      )}
 
-      <Rodape link={"https://github.com/Victhorambrosio"}>Victhor Ambrosio</Rodape>
+      <Rodape link={"https://github.com/Victhorambrosio"}>
+        Victhor Ambrósio
+      </Rodape>
     </div>
   );
 };
